@@ -20,7 +20,7 @@ describe('ThreadRepositoryPostgres', () => {
       const addThread = new AddThread({
         title: 'dicoding title',
         body: 'dicoding body',
-        owner: 'user-123',
+        // owner: 'user-123',
       });
 
       const fakeIdGenerator = () => '123'; // stub!
@@ -32,7 +32,7 @@ describe('ThreadRepositoryPostgres', () => {
         fullname: 'Dicoding Indonesia',
       });
 
-      await threadRepositoryPostgres.addThread(addThread);
+      await threadRepositoryPostgres.addThread(addThread, 'user-123');
 
       const threads = await ThreadsTableTestHelper.findThreadsById('thread-123');
       expect(threads).toHaveLength(1);
@@ -42,7 +42,7 @@ describe('ThreadRepositoryPostgres', () => {
       const addThread = new AddThread({
         title: 'dicoding title',
         body: 'dicoding body',
-        owner: 'user-123',
+        // owner: 'user-123',
       });
 
       const fakeIdGenerator = () => '123'; // stub!
@@ -54,7 +54,7 @@ describe('ThreadRepositoryPostgres', () => {
         fullname: 'Dicoding Indonesia',
       });
 
-      const addedThread = await threadRepositoryPostgres.addThread(addThread);
+      const addedThread = await threadRepositoryPostgres.addThread(addThread, 'user-123');
 
       expect(addedThread).toStrictEqual(new AddedThread({
         id: 'thread-123',
