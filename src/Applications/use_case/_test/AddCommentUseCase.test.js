@@ -19,7 +19,7 @@ describe('AddCommentUseCase', () => {
 
     const mockCommentRepository = new CommentRepository();
 
-    mockCommentRepository.addcomment = jest.fn()
+    mockCommentRepository.addComment = jest.fn()
       .mockImplementation(() => Promise.resolve(expectedAddedComment));
 
     const addCommentUseCase = new AddCommentUseCase({
@@ -29,11 +29,12 @@ describe('AddCommentUseCase', () => {
     const addedComment = await addCommentUseCase.execute(useCasePayload);
 
     expect(addedComment).toStrictEqual(expectedAddedComment);
-    expect(mockCommentRepository.addcomment).toBeCalledWith(
+    expect(mockCommentRepository.addComment).toBeCalledWith(
       new AddComment({
-        threadId: 'comment-123',
         content: useCasePayload.content,
-      }), useCasePayload.owner,
+      }),
+      useCasePayload.threadId,
+      useCasePayload.owner,
     );
   });
 });
