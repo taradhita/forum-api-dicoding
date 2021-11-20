@@ -3,7 +3,7 @@
 const Jwt = require('@hapi/jwt');
 const UsersTableTestHelper = require('./UsersTableTestHelper');
 
-const TokenManagerHelper = {
+const ServerTestHelper = {
   async getAccessToken(userId = 123) {
     const payloadUser = {
       id: `user-${userId}`,
@@ -17,4 +17,4 @@ const TokenManagerHelper = {
   },
 };
 
-module.exports = TokenManagerHelper;
+module.exports = ServerTestHelper;

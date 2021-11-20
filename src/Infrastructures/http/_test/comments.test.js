@@ -1,11 +1,12 @@
 const pool = require('../../database/postgres/pool');
 const ThreadsTableTestHelper = require('../../../../tests/ThreadsTableTestHelper');
 const UsersTableTestHelper = require('../../../../tests/UsersTableTestHelper');
+const CommentsTableTestHelper = require('../../../../tests/CommentsTableTestHelper');
 const ServerTestHelper = require('../../../../tests/ServerTestHelper');
 const container = require('../../container');
 const createServer = require('../createServer');
 
-describe('threads endpoint', () => {
+describe('comments endpoint', () => {
   afterAll(async () => {
     await pool.end();
   });
@@ -13,107 +14,119 @@ describe('threads endpoint', () => {
   afterEach(async () => {
     await ThreadsTableTestHelper.cleanTable();
     await UsersTableTestHelper.cleanTable();
+    await CommentsTableTestHelper.cleanTable();
   });
 
-  describe('when POST /threads', () => {
-    it('should response 201 and persisted thread', async () => {
-      // Arrange
+  describe('when POST /threads/{threadId}/comments', () => {
+    it('should response 201 and persisted comment', async() => {
       const requestPayload = {
-        title: 'dicoding',
-        body: 'secret',
+        content: 'dicoding',
       };
-      // eslint-disable-next-line no-undef
+
       const accessToken = await ServerTestHelper.getAccessToken();
       const server = await createServer(container);
+
+      const threadId = 'thread-123';
+
+      await ThreadsTableTestHelper.addThread({ id: threadId });
 
       // Action
       const response = await server.inject({
         method: 'POST',
-        url: '/threads',
+        url: `/threads/${threadId}/comments`,
         payload: requestPayload,
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
       });
 
-      // Assert
+      // assert
       const responseJson = JSON.parse(response.payload);
       expect(response.statusCode).toEqual(201);
       expect(responseJson.status).toEqual('success');
-      expect(responseJson.data.addedThread).toBeDefined();
-      expect(responseJson.data.addedThread.title).toEqual(requestPayload.title);
+      expect(responseJson.data).toBeDefined();
+      expect(responseJson.data.addedComment).toBeDefined();
+      expect(responseJson.data.addedComment.id).toBeDefined();
+      expect(responseJson.data.addedComment.content).toBeDefined();
+      expect(responseJson.data.addedComment.owner).toBeDefined();
     });
 
-    it('should response 400 when request payload not contain needed property', async () => {
-      // Arrange
-      const requestPayload = {
-        title: 'dicoding',
-      };
-      // eslint-disable-next-line no-undef
-      const accessToken = await ServerTestHelper.getAccessToken();
+    it('should response 400 when request payload not contain needed property', async() => {
+      const requestPayload = {};
+
       const server = await createServer(container);
 
-      // Action
+      const accessToken = await ServerTestHelper.getAccessToken();
+      const threadId = 'thread-123';
+
+      await ThreadsTableTestHelper.addThread({ id: threadId });
+
+      // action
       const response = await server.inject({
         method: 'POST',
-        url: '/threads',
+        url: `/threads/${threadId}/comments`,
         payload: requestPayload,
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
       });
 
-      // Assert
+      // assert
       const responseJson = JSON.parse(response.payload);
       expect(response.statusCode).toEqual(400);
       expect(responseJson.status).toEqual('fail');
-      expect(responseJson.message).toEqual('tidak dapat membuat thread baru karena properti yang dibutuhkan tidak ada');
+      expect(responseJson.message).toBeDefined()
     });
 
-    it('should response 401 when request payload not contain authentication', async () => {
-      // Arrange
+    it('should response 401 when request payload not contain authentication', async() => {
       const requestPayload = {
-        title: 'dicoding',
-        body: 'secret',
+        content: 'dicoding',
       };
-      // eslint-disable-next-line no-undef
+
+      await ServerTestHelper.getAccessToken();
+      
       const server = await createServer(container);
+      const threadId = 'thread-123';
+      await ThreadsTableTestHelper.addThread({ id: threadId });
 
       // Action
       const response = await server.inject({
         method: 'POST',
-        url: '/threads',
+        url: `/threads/${threadId}/comments`,
         payload: requestPayload,
       });
+
       // Assert
       expect(response.statusCode).toEqual(401);
     });
 
-    it('should response 400 when request payload not meet data type specification', async () => {
-      // Arrange
+    it('should response 400 when request payload not meet data type specification', async() => {
       const requestPayload = {
-        title: 'dicoding',
-        body: {},
+        content: {},
       };
-      // eslint-disable-next-line no-undef
-      const accessToken = await ServerTestHelper.getAccessToken();
+
       const server = await createServer(container);
 
-      // Action
+      const accessToken = await ServerTestHelper.getAccessToken();
+      const threadId = 'thread-123';
+
+      await ThreadsTableTestHelper.addThread({ id: threadId });
+
+      // action
       const response = await server.inject({
         method: 'POST',
-        url: '/threads',
+        url: `/threads/${threadId}/comments`,
         payload: requestPayload,
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
       });
 
-      // Assert
+      // assert
       const responseJson = JSON.parse(response.payload);
       expect(response.statusCode).toEqual(400);
       expect(responseJson.status).toEqual('fail');
-      expect(responseJson.message).toEqual('tidak dapat membuat thread baru karena tipe data tidak sesuai');
+      expect(responseJson.message).toBeDefined()
     });
   });
 });

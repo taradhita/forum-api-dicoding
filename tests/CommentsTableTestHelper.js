@@ -6,7 +6,7 @@ const CommentsTableTestHelper = {
     id = 'comment-123', idThread = 'thread-123', owner = 'user-123', date = '2021-08-08T07:19:09.775Z', content = 'comment content', isDelete = false,
   }) {
     const query = {
-      text: 'INSERT INTO users VALUES($1, $2, $3, $4, $5, $6)',
+      text: 'INSERT INTO comments VALUES($1, $2, $3, $4, $5, $6)',
       values: [id, idThread, owner, date, content, isDelete],
     };
 
@@ -15,7 +15,7 @@ const CommentsTableTestHelper = {
 
   async findCommentsById(id) {
     const query = {
-      text: 'SELECT * FROM users WHERE id = $1',
+      text: 'SELECT * FROM comments WHERE id = $1',
       values: [id],
     };
 
@@ -24,7 +24,7 @@ const CommentsTableTestHelper = {
   },
 
   async cleanTable() {
-    await pool.query('DELETE FROM users WHERE 1=1');
+    await pool.query('DELETE FROM comments WHERE 1=1');
   },
 };
 

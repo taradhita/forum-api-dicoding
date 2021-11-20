@@ -32,5 +32,16 @@
     "jest": "^27.0.6",
     "node-pg-migrate": "^5.10.0",
     "nodemon": "^2.0.9"
-  }
+  },
+  "directories": {
+    "test": "tests"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/taradhita/forum-api-dicoding.git"
+  },
+  "bugs": {
+    "url": "https://github.com/taradhita/forum-api-dicoding/issues"
+  },
+  "homepage": "https://github.com/taradhita/forum-api-dicoding#readme"
 }

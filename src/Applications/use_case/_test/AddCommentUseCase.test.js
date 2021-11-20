@@ -32,9 +32,9 @@ describe('AddCommentUseCase', () => {
     expect(mockCommentRepository.addComment).toBeCalledWith(
       new AddComment({
         content: useCasePayload.content,
+        threadId: useCasePayload.threadId,
+        owner: useCasePayload.owner,
       }),
-      useCasePayload.threadId,
-      useCasePayload.owner,
     );
   });
 });
