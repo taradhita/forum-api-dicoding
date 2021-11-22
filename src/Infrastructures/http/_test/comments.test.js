@@ -129,4 +129,56 @@ describe('comments endpoint', () => {
       expect(responseJson.message).toBeDefined()
     });
   });
+
+  describe('when DELETE /threads/{threadId)/comments/{commentId}', () => {
+    it('should respond with 200 and return success status', async () => {
+      const server = await createServer(container);
+      const accessToken = await ServerTestHelper.getAccessToken();
+
+      const threadId = 'thread-123';
+      const commentId = 'comment-123';
+      const userId = 'user-123';
+
+      await ThreadsTableTestHelper.addThread({ id: threadId, owner: userId });
+      await CommentsTableTestHelper.addComments({ id: commentId, owner: userId });
+
+      const response = await server.inject({
+        method: 'DELETE',
+        url: `/threads/${threadId}/comments/${commentId}`,
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+
+      const responseJson = JSON.parse(response.payload);
+      expect(response.statusCode).toEqual(200);
+      expect(responseJson.status).toEqual('success');
+    });
+
+    it('should respond with 403 when user not authorized', async () => {
+      const server = await createServer(container);
+      const accessToken = await ServerTestHelper.getAccessToken();
+
+      const threadId = 'thread-123';
+      const commentId = 'comment-123';
+      const userId = 'user-456';
+
+      await UsersTableTestHelper.addUser({ id: userId, username: 'user'});
+      await ThreadsTableTestHelper.addThread({ id: threadId, owner: userId });
+      await CommentsTableTestHelper.addComments({ id: commentId, owner: userId });
+
+      const response = await server.inject({
+        method: 'DELETE',
+        url: `/threads/${threadId}/comments/${commentId}`,
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+
+      const responseJson = JSON.parse(response.payload);
+      expect(response.statusCode).toEqual(403);
+      expect(responseJson.status).toEqual('fail');
+      expect(responseJson.message).toBeDefined();
+    });
+  });
 });
