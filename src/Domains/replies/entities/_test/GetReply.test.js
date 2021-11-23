@@ -1,6 +1,6 @@
-const GetComment = require('../GetComment');
+const GetReply = require('../GetReply');
 
-describe('a GetComment entities', () => {
+describe('a GetReply entities', () => {
   it('should throw error when payload did not contain needed property', () => {
     // Arrange
     const payload = {
@@ -8,40 +8,40 @@ describe('a GetComment entities', () => {
     };
 
     // Action and Assert
-    expect(() => new GetComment(payload)).toThrowError('GET_COMMENT.NOT_CONTAIN_NEEDED_PROPERTY');
+    expect(() => new GetReply(payload)).toThrowError('GET_REPLY.NOT_CONTAIN_NEEDED_PROPERTY');
   });
 
   it('should throw error when payload did not meet data type specification', () => {
     // Arrange
     const payload = {
-      id: 'comment-123',
+      id: 'reply-123',
+      commentId: 'comment-123',
       username: 123,
       date: '2021-08-08T07:19:09.775Z',
       content: {},
-      replies: [],
     };
     // Action and Assert
-    expect(() => new GetComment(payload)).toThrowError('GET_COMMENT.NOT_MEET_DATA_TYPE_SPECIFICATION');
+    expect(() => new GetReply(payload)).toThrowError('GET_REPLY.NOT_MEET_DATA_TYPE_SPECIFICATION');
   });
 
-  it('should create getThread object correctly', () => {
+  it('should create getReply object correctly', () => {
     // Arrange
     const payload = {
-      id: 'comment-123',
+      id: 'reply-123',
+      commentId: 'comment-123',
       username: 'dicoding',
       date: '2021-08-08T07:19:09.775Z',
       content: 'content',
-      replies: [],
     };
     // Action
     const {
-      id, content, date, username, replies
-    } = new GetComment(payload);
+      id, commentId, content, date, username
+    } = new GetReply(payload);
     // Assert
     expect(id).toEqual(payload.id);
+    expect(commentId).toEqual(payload.commentId);
     expect(content).toEqual(payload.content);
     expect(date).toEqual(payload.date);
     expect(username).toEqual(payload.username);
-    expect(replies).toEqual(payload.replies);
   });
 });

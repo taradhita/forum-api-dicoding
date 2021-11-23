@@ -1,39 +1,39 @@
-class GetComment {
+class GetReply {
   constructor(payload) {
     this._verifyPayload(payload);
 
     const {
-      id, content, date, username, replies
+      id, commentId, content, date, username
     } = payload;
 
     this.id = id;
+    this.commentId = commentId;
     this.content = content;
     this.date = date;
     this.username = username;
-    this.replies = replies;
   }
 
   _verifyPayload({
     id,
+    commentId,
     content,
     date,
     username,
-    replies
   }) {
-    if (!id || !content || !date || !username || !replies) {
-      throw new Error('GET_COMMENT.NOT_CONTAIN_NEEDED_PROPERTY');
+    if (!id || !commentId || !content || !date || !username) {
+      throw new Error('GET_REPLY.NOT_CONTAIN_NEEDED_PROPERTY');
     }
 
     if (
       typeof id !== 'string'
+      || typeof commentId !== 'string'
       || typeof content !== 'string'
       || typeof date !== 'string'
       || typeof username !== 'string'
-      || !(Array.isArray(replies))
     ) {
-      throw new Error('GET_COMMENT.NOT_MEET_DATA_TYPE_SPECIFICATION');
+      throw new Error('GET_REPLY.NOT_MEET_DATA_TYPE_SPECIFICATION');
     }
   }
 }
 
-module.exports = GetComment;
+module.exports = GetReply;
