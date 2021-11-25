@@ -2,20 +2,16 @@ const CommentRepository = require('../../../Domains/comments/CommentRepository')
 const DeleteCommentUseCase = require('../DeleteCommentUseCase');
 
 describe('DeleteCommentUseCase', () => {
-  it('should orchestrating the delete comment action correctly', async() => {
+  it('should orchestrating the delete comment action correctly', async () => {
     const useCasePayload = {
       threadId: 'thread-123',
       commentId: 'comment-123',
       owner: 'user-123',
     };
 
-    /*const useCasePayload = {
-      owner: 'user-123',
-    };*/
-
     const expectedDeletedComment = {
       id: 'comment-123',
-    }; 
+    };
 
     const mockCommentRepository = new CommentRepository();
 

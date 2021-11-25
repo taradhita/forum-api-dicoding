@@ -14,7 +14,7 @@ class ThreadsHandler {
       body: request.payload.body,
       owner: request.auth.credentials.id,
     };
-    
+
     const addThreadUseCase = this._container.getInstance(AddThreadUseCase.name);
     const addedThread = await addThreadUseCase.execute(useCasePayload);
 

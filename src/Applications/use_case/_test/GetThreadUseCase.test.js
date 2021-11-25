@@ -82,8 +82,6 @@ describe('GetThreadUseCase', () => {
 
     const retrievedThread = await getThreadUseCase.execute(useCaseParam);
 
-    //console.log(retrievedThread);
-
     expect(retrievedThread).toEqual(new GetThread({
       ...expectedThread, comments: expectedCommentsAndReplies,
     }));

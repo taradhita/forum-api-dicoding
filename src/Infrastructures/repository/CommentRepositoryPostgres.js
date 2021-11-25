@@ -36,7 +36,7 @@ class CommentRepositoryPostgres extends CommentRepository {
 
   async getCommentsByThreadId(threadId) {
     const query = {
-      text:`SELECT  comments.id,
+      text: `SELECT  comments.id,
               CASE WHEN comments.is_delete = TRUE THEN '**komentar telah dihapus**' else comments.content END AS content,
               comments.date, 
               users.username
@@ -56,6 +56,7 @@ class CommentRepositoryPostgres extends CommentRepository {
       FROM comments INNER JOIN threads ON comments.id_thread = threads.id
       WHERE threads.id = $1
       AND comments.id = $2
+      AND comments.is_delete = FALSE
       `,
       values: [threadId, commentId],
     };
