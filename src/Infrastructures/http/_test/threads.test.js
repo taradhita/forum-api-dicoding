@@ -2,6 +2,7 @@ const pool = require('../../database/postgres/pool');
 const ThreadsTableTestHelper = require('../../../../tests/ThreadsTableTestHelper');
 const UsersTableTestHelper = require('../../../../tests/UsersTableTestHelper');
 const CommentsTableTestHelper = require('../../../../tests/CommentsTableTestHelper');
+const RepliesTableTestHelper = require('../../../../tests/RepliesTableTestHelper');
 const ServerTestHelper = require('../../../../tests/ServerTestHelper');
 const container = require('../../container');
 const createServer = require('../createServer');
@@ -119,7 +120,7 @@ describe('threads endpoint', () => {
   });
 
   describe('when GET /threads/{threadId}', () => {
-    it('should respond with 200 with thread details and comments', async () => {
+    it('should respond with 200 with thread details, comments and replies', async () => {
       const server = await createServer(container);
 
       const threadId = 'thread-123';
@@ -128,6 +129,8 @@ describe('threads endpoint', () => {
       await ThreadsTableTestHelper.addThread({ id: threadId });
       await CommentsTableTestHelper.addComments({ id: 'comment-123', threadId, owner: 'user-123' });
       await CommentsTableTestHelper.addComments({ id: 'comment-456', threadId, owner: 'user-456' });
+      await RepliesTableTestHelper.addReply({ id: 'reply-123', commentID: 'comment-123', owner: 'user-456'});
+      await RepliesTableTestHelper.addReply({ id: 'reply-456', commentID: 'comment-456', owner: 'user-123'});
 
       const response = await server.inject({
         method: 'GET',
@@ -140,6 +143,7 @@ describe('threads endpoint', () => {
       expect(responseJson.data).toBeDefined();
       expect(responseJson.data.thread).toBeDefined();
       expect(responseJson.data.thread.comments).toHaveLength(2);
+      //expect(responseJson.data.thread.replies).toHaveLength(2);
     });
 
     it('should respond with 404 if thread not found', async () => {
