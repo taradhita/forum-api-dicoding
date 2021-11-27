@@ -10,6 +10,7 @@ class AddReplyUseCase {
       content: useCasePayload.content,
       commentId: useCasePayload.commentId,
       owner: useCasePayload.owner,
+      threadId: useCasePayload.threadId,
     });
     return this._replyRepository.addReply(addReply);
   }

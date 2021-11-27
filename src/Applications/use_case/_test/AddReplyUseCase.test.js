@@ -9,6 +9,7 @@ describe('AddReplyUseCase', () => {
       commentId: 'comment-123',
       content: 'comment body',
       owner: 'user-123',
+      threadId: 'thread-123',
     };
 
     const expectedAddedReply = new AddedReply({
@@ -34,6 +35,7 @@ describe('AddReplyUseCase', () => {
         content: useCasePayload.content,
         commentId: useCasePayload.commentId,
         owner: useCasePayload.owner,
+        threadId: 'thread-123',
       }),
     );
   });

@@ -3,7 +3,7 @@ class GetReply {
     this._verifyPayload(payload);
 
     const {
-      id, commentId, content, date, username
+      id, commentId, content, date, username,
     } = payload;
 
     this.id = id;

@@ -46,6 +46,7 @@ describe('ReplyRepositoryPostgres', () => {
         content: 'dicoding content',
         commentId: 'comment-123',
         owner: 'user-123',
+        threadId: 'thread-123',
       });
 
       const fakeIdGenerator = () => '123'; // stub!
@@ -62,6 +63,7 @@ describe('ReplyRepositoryPostgres', () => {
         content: 'dicoding content',
         commentId: 'comment-123',
         owner: 'user-123',
+        threadId: 'thread-123',
       });
 
       const fakeIdGenerator = () => '123'; // stub!
@@ -81,6 +83,23 @@ describe('ReplyRepositoryPostgres', () => {
         content: 'dicoding content',
         commentId: 'comment-456',
         owner: 'user-123',
+        threadId: 'thread-123',
+      });
+
+      const fakeIdGenerator = () => '123'; // stub!
+      const replyRepositoryPostgres = new ReplyRepositoryPostgres(pool, fakeIdGenerator);
+
+      await expect(replyRepositoryPostgres.addReply(addReply))
+        .rejects
+        .toThrowError(NotFoundError);
+    });
+
+    it('should return error when thread not found', async () => {
+      const addReply = new AddReply({
+        content: 'dicoding content',
+        commentId: 'comment-456',
+        owner: 'user-123',
+        threadId: 'thread-456',
       });
 
       const fakeIdGenerator = () => '123'; // stub!

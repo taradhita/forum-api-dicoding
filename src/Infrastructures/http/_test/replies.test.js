@@ -20,7 +20,7 @@ describe('replies endpoint', () => {
   });
 
   describe('when POST /threads/{threadId}/comments/{commentId}/replies', () => {
-    it('should response 201 and persisted reply', async() => {
+    it('should response 201 and persisted reply', async () => {
       const requestPayload = {
         content: 'dicoding',
       };
@@ -34,7 +34,7 @@ describe('replies endpoint', () => {
 
       const commentId = 'comment-123';
 
-      await CommentsTableTestHelper.addComments({ id: commentId, threadId: threadId });
+      await CommentsTableTestHelper.addComments({ id: commentId, idThread: threadId });
 
       const response = await server.inject({
         method: 'POST',
@@ -55,7 +55,7 @@ describe('replies endpoint', () => {
       expect(responseJson.data.addedReply.owner).toBeDefined();
     });
 
-    it('should response 400 when request payload not contain needed property', async() => {
+    it('should response 400 when request payload not contain needed property', async () => {
       const requestPayload = {};
 
       const accessToken = await ServerTestHelper.getAccessToken();
@@ -67,7 +67,7 @@ describe('replies endpoint', () => {
 
       const commentId = 'comment-123';
 
-      await CommentsTableTestHelper.addComments({ id: commentId, threadId: threadId });
+      await CommentsTableTestHelper.addComments({ id: commentId, idThread: threadId });
 
       const response = await server.inject({
         method: 'POST',
@@ -84,12 +84,12 @@ describe('replies endpoint', () => {
       expect(responseJson.message).toBeDefined();
     });
 
-    it('should response 401 when request payload not contain authentication', async() => {
+    it('should response 401 when request payload not contain authentication', async () => {
       const requestPayload = {
         content: 'dicoding',
       };
 
-      const accessToken = await ServerTestHelper.getAccessToken();
+      await ServerTestHelper.getAccessToken();
       const server = await createServer(container);
 
       const threadId = 'thread-123';
@@ -98,7 +98,7 @@ describe('replies endpoint', () => {
 
       const commentId = 'comment-123';
 
-      await CommentsTableTestHelper.addComments({ id: commentId, threadId: threadId });
+      await CommentsTableTestHelper.addComments({ id: commentId, idThread: threadId });
 
       const response = await server.inject({
         method: 'POST',
@@ -108,7 +108,7 @@ describe('replies endpoint', () => {
       expect(response.statusCode).toEqual(401);
     });
 
-    it('should response 400 when request payload not meet data type specification', async() => {
+    it('should response 400 when request payload not meet data type specification', async () => {
       const requestPayload = {
         content: {},
       };
@@ -122,7 +122,7 @@ describe('replies endpoint', () => {
 
       const commentId = 'comment-123';
 
-      await CommentsTableTestHelper.addComments({ id: commentId, threadId: threadId });
+      await CommentsTableTestHelper.addComments({ id: commentId, idThread: threadId });
 
       const response = await server.inject({
         method: 'POST',
@@ -136,7 +136,7 @@ describe('replies endpoint', () => {
       const responseJson = JSON.parse(response.payload);
       expect(response.statusCode).toEqual(400);
       expect(responseJson.status).toEqual('fail');
-      expect(responseJson.message).toBeDefined()
+      expect(responseJson.message).toBeDefined();
     });
   });
 
@@ -148,11 +148,11 @@ describe('replies endpoint', () => {
       const threadId = 'thread-123';
       const commentId = 'comment-123';
       const userId = 'user-123';
-      const replyId = 'reply-123'
+      const replyId = 'reply-123';
 
       await ThreadsTableTestHelper.addThread({ id: threadId, owner: userId });
       await CommentsTableTestHelper.addComments({ id: commentId, owner: userId });
-      await RepliesTableTestHelper.addReply({ id: replyId, owner: userId, commentId: commentId });
+      await RepliesTableTestHelper.addReply({ id: replyId, owner: userId, commentId });
 
       const response = await server.inject({
         method: 'DELETE',
@@ -174,12 +174,12 @@ describe('replies endpoint', () => {
       const threadId = 'thread-123';
       const commentId = 'comment-123';
       const userId = 'user-456';
-      const replyId = 'reply-123'
+      const replyId = 'reply-123';
 
-      await UsersTableTestHelper.addUser({ id: userId, username: 'user'});
+      await UsersTableTestHelper.addUser({ id: userId, username: 'user' });
       await ThreadsTableTestHelper.addThread({ id: threadId, owner: userId });
       await CommentsTableTestHelper.addComments({ id: commentId, owner: userId });
-      await RepliesTableTestHelper.addReply({ id: replyId, owner: userId, commentId: commentId });
+      await RepliesTableTestHelper.addReply({ id: replyId, owner: userId, commentId });
 
       const response = await server.inject({
         method: 'DELETE',

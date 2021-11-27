@@ -18,7 +18,7 @@ describe('comments endpoint', () => {
   });
 
   describe('when POST /threads/{threadId}/comments', () => {
-    it('should response 201 and persisted comment', async() => {
+    it('should response 201 and persisted comment', async () => {
       const requestPayload = {
         content: 'dicoding',
       };
@@ -51,7 +51,7 @@ describe('comments endpoint', () => {
       expect(responseJson.data.addedComment.owner).toBeDefined();
     });
 
-    it('should response 400 when request payload not contain needed property', async() => {
+    it('should response 400 when request payload not contain needed property', async () => {
       const requestPayload = {};
 
       const server = await createServer(container);
@@ -75,16 +75,16 @@ describe('comments endpoint', () => {
       const responseJson = JSON.parse(response.payload);
       expect(response.statusCode).toEqual(400);
       expect(responseJson.status).toEqual('fail');
-      expect(responseJson.message).toBeDefined()
+      expect(responseJson.message).toBeDefined();
     });
 
-    it('should response 401 when request payload not contain authentication', async() => {
+    it('should response 401 when request payload not contain authentication', async () => {
       const requestPayload = {
         content: 'dicoding',
       };
 
       await ServerTestHelper.getAccessToken();
-      
+
       const server = await createServer(container);
       const threadId = 'thread-123';
       await ThreadsTableTestHelper.addThread({ id: threadId });
@@ -100,7 +100,7 @@ describe('comments endpoint', () => {
       expect(response.statusCode).toEqual(401);
     });
 
-    it('should response 400 when request payload not meet data type specification', async() => {
+    it('should response 400 when request payload not meet data type specification', async () => {
       const requestPayload = {
         content: {},
       };
@@ -126,7 +126,7 @@ describe('comments endpoint', () => {
       const responseJson = JSON.parse(response.payload);
       expect(response.statusCode).toEqual(400);
       expect(responseJson.status).toEqual('fail');
-      expect(responseJson.message).toBeDefined()
+      expect(responseJson.message).toBeDefined();
     });
   });
 
@@ -163,7 +163,7 @@ describe('comments endpoint', () => {
       const commentId = 'comment-123';
       const userId = 'user-456';
 
-      await UsersTableTestHelper.addUser({ id: userId, username: 'user'});
+      await UsersTableTestHelper.addUser({ id: userId, username: 'user' });
       await ThreadsTableTestHelper.addThread({ id: threadId, owner: userId });
       await CommentsTableTestHelper.addComments({ id: commentId, owner: userId });
 

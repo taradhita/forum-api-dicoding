@@ -12,9 +12,22 @@ class ReplyRepositoryPostgres extends ReplyRepository {
   }
 
   async addReply(addReply) {
-    const { commentId, content, owner } = addReply;
+    const {
+      commentId, content, owner, threadId,
+    } = addReply;
     const id = `reply-${this._idGenerator()}`;
     const date = new Date().toISOString();
+
+    const isThreadQuery = {
+      text: 'SELECT * FROM threads WHERE id = $1',
+      values: [threadId],
+    };
+
+    const isThread = await this._pool.query(isThreadQuery);
+
+    if (!isThread.rowCount) {
+      throw new NotFoundError('reply gagal ditambahkan: thread tidak ditemukan');
+    }
 
     const isCommentQuery = {
       text: 'SELECT * FROM comments WHERE id = $1',
@@ -38,7 +51,7 @@ class ReplyRepositoryPostgres extends ReplyRepository {
   async getRepliesByThreadId(threadId) {
     const query = {
       text: `SELECT replies.id, comments.id AS id_comment, 
-              replies.is_delete, replies.content, 
+              CASE WHEN replies.is_delete = TRUE THEN '**balasan telah dihapus**' else replies.content END AS content, 
               replies.date, users.username 
               FROM replies 
               INNER JOIN comments ON replies.id_comment = comments.id
@@ -50,7 +63,7 @@ class ReplyRepositoryPostgres extends ReplyRepository {
 
     const result = await this._pool.query(query);
     return result.rows.map((entry) => new GetReply({
-      ...entry, commentId: entry.id_comment, isDeleted: entry.is_delete,
+      ...entry, commentId: entry.id_comment,
     }));
   }
 

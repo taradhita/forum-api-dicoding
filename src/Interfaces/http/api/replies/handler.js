@@ -13,6 +13,7 @@ class RepliesHandler {
       content: request.payload.content,
       commentId: request.params.commentId,
       owner: request.auth.credentials.id,
+      threadId: request.params.threadId,
     };
 
     const addReplyUseCase = this._container.getInstance(AddReplyUseCase.name);
