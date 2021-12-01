@@ -51,8 +51,7 @@ class ReplyRepositoryPostgres extends ReplyRepository {
   async getRepliesByThreadId(threadId) {
     const query = {
       text: `SELECT replies.id, comments.id AS id_comment, 
-              CASE WHEN replies.is_delete = TRUE THEN '**balasan telah dihapus**' else replies.content END AS content, 
-              replies.date, users.username 
+              replies.is_delete, replies.content, replies.date, users.username 
               FROM replies 
               INNER JOIN comments ON replies.id_comment = comments.id
               INNER JOIN users ON replies.owner = users.id
@@ -63,7 +62,7 @@ class ReplyRepositoryPostgres extends ReplyRepository {
 
     const result = await this._pool.query(query);
     return result.rows.map((entry) => new GetReply({
-      ...entry, commentId: entry.id_comment,
+      ...entry, commentId: entry.id_comment, isDelete: entry.is_delete,
     }));
   }
 

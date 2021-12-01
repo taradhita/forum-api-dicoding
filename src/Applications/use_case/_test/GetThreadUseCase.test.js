@@ -27,13 +27,15 @@ describe('GetThreadUseCase', () => {
         username: 'user',
         date: '2021-09-08T07:19:09.775Z',
         content: 'comment 1',
+        isDelete: false,
         replies: [],
       }),
       new GetComment({
         id: 'comment-456',
         username: 'dicoding',
-        date: '2021-09-08T09:19:09.775Z',
-        content: 'comment 2',
+        date: '2021-10-08T09:19:09.775Z',
+        content: '**komentar telah dihapus**',
+        isDelete: true,
         replies: [],
       }),
     ];
@@ -44,23 +46,32 @@ describe('GetThreadUseCase', () => {
         username: 'dicoding',
         date: '2021-09-08T07:19:09.775Z',
         content: 'reply 1',
+        isDelete: false,
         commentId: 'comment-123',
       }),
       new GetReply({
         id: 'reply-456',
         username: 'user',
         date: '2021-09-08T09:19:09.775Z',
-        content: 'reply 2',
+        content: '**balasan telah dihapus**',
+        isDelete: true,
         commentId: 'comment-456',
       }),
     ];
 
-    const { commentId: commentReplyA, ...replyDetailsA } = expectedReplies[0];
-    const { commentId: commentReplyB, ...replyDetailsB } = expectedReplies[1];
+    const { isDelete: commentIsDeleteA, ...commentDetailsA } = expectedComments[0];
+    const { isDelete: commentIsDeleteB, ...commentDetailsB } = expectedComments[1];
+
+    const {
+      commentId: commentReplyA, isDelete: replyIsDeleteA, ...replyDetailsA
+    } = expectedReplies[0];
+    const {
+      commentId: commentReplyB, isDelete: replyIsDeleteB, ...replyDetailsB
+    } = expectedReplies[1];
 
     const expectedCommentsAndReplies = [
-      { ...expectedComments[0], replies: [replyDetailsA] },
-      { ...expectedComments[1], replies: [replyDetailsB] },
+      { ...commentDetailsA, replies: [replyDetailsA] },
+      { ...commentDetailsB, replies: [replyDetailsB] },
     ];
 
     const mockThreadRepository = new ThreadRepository();

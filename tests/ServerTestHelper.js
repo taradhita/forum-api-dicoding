@@ -12,7 +12,6 @@ const ServerTestHelper = {
       fullname: 'Dicoding Indonesia',
     };
     await UsersTableTestHelper.addUser(payloadUser);
-    // await UsersTableTestHelper.findUsersById(payloadUser.id);
     return Jwt.token.generate(payloadUser, process.env.ACCESS_TOKEN_KEY);
   },
 };

@@ -3,7 +3,7 @@ class GetReply {
     this._verifyPayload(payload);
 
     const {
-      id, commentId, content, date, username,
+      id, commentId, content, date, username, isDelete,
     } = payload;
 
     this.id = id;
@@ -11,6 +11,7 @@ class GetReply {
     this.content = content;
     this.date = date;
     this.username = username;
+    this.isDelete = isDelete;
   }
 
   _verifyPayload({
@@ -19,8 +20,9 @@ class GetReply {
     content,
     date,
     username,
+    isDelete,
   }) {
-    if (!id || !commentId || !content || !date || !username) {
+    if (!id || !commentId || !content || !date || !username || isDelete === undefined) {
       throw new Error('GET_REPLY.NOT_CONTAIN_NEEDED_PROPERTY');
     }
 
@@ -30,6 +32,7 @@ class GetReply {
       || typeof content !== 'string'
       || typeof date !== 'string'
       || typeof username !== 'string'
+      || typeof isDelete !== 'boolean'
     ) {
       throw new Error('GET_REPLY.NOT_MEET_DATA_TYPE_SPECIFICATION');
     }

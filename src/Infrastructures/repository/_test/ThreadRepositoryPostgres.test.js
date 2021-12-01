@@ -72,8 +72,8 @@ describe('ThreadRepositoryPostgres', () => {
       await ThreadsTableTestHelper.addThread({ id: 'thread-123', owner: 'user-123' });
 
       await expect(threadRepositoryPostgres.getThreadById('thread-456'))
-          .rejects
-          .toThrowError(NotFoundError);
+        .rejects
+        .toThrowError(NotFoundError);
     });
 
     it('should return thread correctly', async () => {

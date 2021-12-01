@@ -87,10 +87,10 @@ describe('CommentRepositoryPostgres', () => {
   describe('getCommentsByThreadId function', () => {
     it('should return all comments from thread correctly', async () => {
       const firstComment = {
-        id: 'comment-123', date: '2020-01-01', content: 'first comment',
+        id: 'comment-123', date: '2020-01-01', content: 'first comment', isDelete: true, replies: [],
       };
       const secondComment = {
-        id: 'comment-456', date: '2020-10-01', content: 'second comment',
+        id: 'comment-456', date: '2020-10-01', content: 'second comment', isDelete: false, replies: [],
       };
 
       await CommentsTableTestHelper.addComments(firstComment);

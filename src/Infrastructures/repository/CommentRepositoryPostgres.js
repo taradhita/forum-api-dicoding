@@ -1,4 +1,5 @@
 const AddedComment = require('../../Domains/comments/entities/AddedComment');
+const GetComment = require('../../Domains/comments/entities/GetComment');
 const CommentRepository = require('../../Domains/comments/CommentRepository');
 const NotFoundError = require('../../Commons/exceptions/NotFoundError');
 const AuthorizationError = require('../../Commons/exceptions/AuthorizationError');
@@ -36,8 +37,9 @@ class CommentRepositoryPostgres extends CommentRepository {
 
   async getCommentsByThreadId(threadId) {
     const query = {
-      text: `SELECT  comments.id,
-              CASE WHEN comments.is_delete = TRUE THEN '**komentar telah dihapus**' else comments.content END AS content,
+      text: `SELECT comments.id,
+              comments.content,
+              comments.is_delete,
               comments.date, 
               users.username
               FROM comments INNER JOIN users
@@ -47,7 +49,9 @@ class CommentRepositoryPostgres extends CommentRepository {
       values: [threadId],
     };
     const result = await this._pool.query(query);
-    return result.rows;
+    return result.rows.map((entry) => new GetComment({
+      ...entry, isDelete: entry.is_delete, replies: [],
+    }));
   }
 
   async checkIfCommentExist({ threadId, commentId }) {

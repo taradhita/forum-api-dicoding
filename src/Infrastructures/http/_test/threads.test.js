@@ -129,8 +129,8 @@ describe('threads endpoint', () => {
       await ThreadsTableTestHelper.addThread({ id: threadId });
       await CommentsTableTestHelper.addComments({ id: 'comment-123', threadId, owner: 'user-123' });
       await CommentsTableTestHelper.addComments({ id: 'comment-456', threadId, owner: 'user-456' });
-      await RepliesTableTestHelper.addReply({ id: 'reply-123', commentID: 'comment-123', owner: 'user-456'});
-      await RepliesTableTestHelper.addReply({ id: 'reply-456', commentID: 'comment-456', owner: 'user-123'});
+      await RepliesTableTestHelper.addReply({ id: 'reply-123', commentId: 'comment-123', owner: 'user-456' });
+      await RepliesTableTestHelper.addReply({ id: 'reply-456', commentId: 'comment-456', owner: 'user-123' });
 
       const response = await server.inject({
         method: 'GET',
@@ -143,7 +143,8 @@ describe('threads endpoint', () => {
       expect(responseJson.data).toBeDefined();
       expect(responseJson.data.thread).toBeDefined();
       expect(responseJson.data.thread.comments).toHaveLength(2);
-      //expect(responseJson.data.thread.replies).toHaveLength(2);
+      expect(responseJson.data.thread.comments[0].replies).toHaveLength(1);
+      expect(responseJson.data.thread.comments[1].replies).toHaveLength(1);
     });
 
     it('should respond with 404 if thread not found', async () => {
@@ -159,6 +160,6 @@ describe('threads endpoint', () => {
       expect(response.statusCode).toEqual(404);
       expect(responseJson.status).toEqual('fail');
       expect(responseJson.message).toBeDefined();
-    })
-  })
+    });
+  });
 });

@@ -3,13 +3,14 @@ class GetComment {
     this._verifyPayload(payload);
 
     const {
-      id, content, date, username, replies
+      id, content, date, username, isDelete, replies,
     } = payload;
 
     this.id = id;
     this.content = content;
     this.date = date;
     this.username = username;
+    this.isDelete = isDelete;
     this.replies = replies;
   }
 
@@ -18,9 +19,10 @@ class GetComment {
     content,
     date,
     username,
-    replies
+    isDelete,
+    replies,
   }) {
-    if (!id || !content || !date || !username || !replies) {
+    if (!id || !content || !date || !username || isDelete === undefined || !replies) {
       throw new Error('GET_COMMENT.NOT_CONTAIN_NEEDED_PROPERTY');
     }
 
@@ -29,6 +31,7 @@ class GetComment {
       || typeof content !== 'string'
       || typeof date !== 'string'
       || typeof username !== 'string'
+      || typeof isDelete !== 'boolean'
       || !(Array.isArray(replies))
     ) {
       throw new Error('GET_COMMENT.NOT_MEET_DATA_TYPE_SPECIFICATION');

@@ -120,10 +120,10 @@ describe('ReplyRepositoryPostgres', () => {
       });
 
       const firstReply = {
-        id: 'reply-123', date: '2020-01-01', commentId: 'comment-123', content: 'first reply',
+        id: 'reply-123', date: '2020-01-01', commentId: 'comment-123', content: 'first reply', isDelete: false,
       };
       const secondReply = {
-        id: 'reply-456', date: '2020-10-01', commentId: 'comment-456', content: 'second reply',
+        id: 'reply-456', date: '2020-10-01', commentId: 'comment-456', content: 'second reply', isDelete: false,
       };
 
       await RepliesTableTestHelper.addReply(firstReply);
