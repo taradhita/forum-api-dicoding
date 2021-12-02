@@ -16,33 +16,15 @@ class ReplyRepositoryPostgres extends ReplyRepository {
       commentId, content, owner, threadId,
     } = addReply;
     const id = `reply-${this._idGenerator()}`;
-    const date = new Date().toISOString();
 
     const isThreadQuery = {
       text: 'SELECT * FROM threads WHERE id = $1',
       values: [threadId],
     };
 
-    const isThread = await this._pool.query(isThreadQuery);
-
-    if (!isThread.rowCount) {
-      throw new NotFoundError('reply gagal ditambahkan: thread tidak ditemukan');
-    }
-
-    const isCommentQuery = {
-      text: 'SELECT * FROM comments WHERE id = $1',
-      values: [commentId],
-    };
-
-    const isComment = await this._pool.query(isCommentQuery);
-
-    if (!isComment.rowCount) {
-      throw new NotFoundError('reply gagal ditambahkan: comment tidak ditemukan');
-    }
-
     const query = {
-      text: 'INSERT INTO replies VALUES($1,$2,$3,$4,$5) RETURNING id, content, owner',
-      values: [id, content, date, owner, commentId],
+      text: 'INSERT INTO replies(id, content, owner, id_comment) VALUES($1,$2,$3,$4) RETURNING id, content, owner',
+      values: [id, content, owner, commentId],
     };
     const result = await this._pool.query(query);
     return new AddedReply({ ...result.rows[0] });

@@ -14,22 +14,10 @@ class CommentRepositoryPostgres extends CommentRepository {
   async addComment(addComment) {
     const { threadId, content, owner } = addComment;
     const id = `comment-${this._idGenerator()}`;
-    const date = new Date().toISOString();
-
-    const isThreadQuery = {
-      text: 'SELECT * FROM threads WHERE id = $1',
-      values: [threadId],
-    };
-
-    const isThread = await this._pool.query(isThreadQuery);
-
-    if (!isThread.rowCount) {
-      throw new NotFoundError('comment gagal ditambahkan: thread tidak ditemukan');
-    }
 
     const query = {
-      text: 'INSERT INTO comments VALUES($1,$2,$3,$4,$5) RETURNING id, content, owner',
-      values: [id, threadId, owner, date, content],
+      text: 'INSERT INTO comments(id, id_thread, owner, content) VALUES($1,$2,$3,$4) RETURNING id, content, owner',
+      values: [id, threadId, owner, content],
     };
     const result = await this._pool.query(query);
     return new AddedComment({ ...result.rows[0] });
@@ -65,7 +53,7 @@ class CommentRepositoryPostgres extends CommentRepository {
       values: [threadId, commentId],
     };
     const result = await this._pool.query(query);
-    if (!result.rows.length) {
+    if (!result.rowCount) {
       throw new NotFoundError('comment tidak ada');
     }
   }

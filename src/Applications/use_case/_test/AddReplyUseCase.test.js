@@ -1,6 +1,7 @@
 const AddReply = require('../../../Domains/replies/entities/AddReply');
 const AddedReply = require('../../../Domains/replies/entities/AddedReply');
 const ReplyRepository = require('../../../Domains/replies/ReplyRepository');
+const CommentRepository = require('../../../Domains/comments/CommentRepository');
 const AddReplyUseCase = require('../AddReplyUseCase');
 
 describe('AddReplyUseCase', () => {
@@ -19,12 +20,14 @@ describe('AddReplyUseCase', () => {
     });
 
     const mockReplyRepository = new ReplyRepository();
+    const mockCommentRepository = new CommentRepository();
 
-    mockReplyRepository.addReply = jest.fn()
-      .mockImplementation(() => Promise.resolve(expectedAddedReply));
+    mockCommentRepository.checkIfCommentExist = jest.fn(() => Promise.resolve());
+    mockReplyRepository.addReply = jest.fn(() => Promise.resolve(expectedAddedReply));
 
     const addReplyUseCase = new AddReplyUseCase({
       replyRepository: mockReplyRepository,
+      commentRepository: mockCommentRepository,
     });
 
     const addedReply = await addReplyUseCase.execute(useCasePayload);

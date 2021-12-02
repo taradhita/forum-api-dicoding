@@ -32,13 +32,12 @@ class ThreadsHandler {
     const getThreadUseCase = this._container.getInstance(GetThreadUseCase.name);
     const getThread = await getThreadUseCase.execute(request.params);
 
-    const response = h.response({
+    return h.response({
       status: 'success',
       data: {
         thread: getThread,
       },
     });
-    return response;
   }
 }
 

@@ -67,7 +67,7 @@ describe('CommentRepositoryPostgres', () => {
         owner: 'user-123',
       }));
     });
-
+    /*
     it('should return error when thread not found', async () => {
       const addComment = new AddComment({
         content: 'dicoding content',
@@ -82,6 +82,7 @@ describe('CommentRepositoryPostgres', () => {
         .rejects
         .toThrowError(NotFoundError);
     });
+    */
   });
 
   describe('getCommentsByThreadId function', () => {
