@@ -14,7 +14,17 @@ class GetReply {
     this.isDelete = isDelete;
   }
 
-  _verifyPayload({
+  _verifyPayload(payload) {
+    if (this._isPayloadNotContainNeededProperty(payload)) {
+      throw new Error('GET_REPLY.NOT_CONTAIN_NEEDED_PROPERTY');
+    }
+
+    if (this._isPayloadNotMeetDataTypeSpecification(payload)) {
+      throw new Error('GET_REPLY.NOT_MEET_DATA_TYPE_SPECIFICATION');
+    }
+  }
+
+  _isPayloadNotContainNeededProperty({
     id,
     commentId,
     content,
@@ -22,20 +32,25 @@ class GetReply {
     username,
     isDelete,
   }) {
-    if (!id || !commentId || !content || !date || !username || isDelete === undefined) {
-      throw new Error('GET_REPLY.NOT_CONTAIN_NEEDED_PROPERTY');
-    }
+    return (!id || !commentId || !content || !date || !username || isDelete === undefined);
+  }
 
-    if (
+  _isPayloadNotMeetDataTypeSpecification({
+    id,
+    commentId,
+    content,
+    date,
+    username,
+    isDelete,
+  }) {
+    return (
       typeof id !== 'string'
       || typeof commentId !== 'string'
       || typeof content !== 'string'
       || typeof date !== 'string'
       || typeof username !== 'string'
       || typeof isDelete !== 'boolean'
-    ) {
-      throw new Error('GET_REPLY.NOT_MEET_DATA_TYPE_SPECIFICATION');
-    }
+    );
   }
 }
 
