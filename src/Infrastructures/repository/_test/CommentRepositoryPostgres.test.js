@@ -67,31 +67,15 @@ describe('CommentRepositoryPostgres', () => {
         owner: 'user-123',
       }));
     });
-    /*
-    it('should return error when thread not found', async () => {
-      const addComment = new AddComment({
-        content: 'dicoding content',
-        threadId: 'thread-456',
-        owner: 'user-123',
-      });
-
-      const fakeIdGenerator = () => '123'; // stub!
-      const commentRepositoryPostgres = new CommentRepositoryPostgres(pool, fakeIdGenerator);
-
-      await expect(commentRepositoryPostgres.addComment(addComment))
-        .rejects
-        .toThrowError(NotFoundError);
-    });
-    */
   });
 
   describe('getCommentsByThreadId function', () => {
     it('should return all comments from thread correctly', async () => {
       const firstComment = {
-        id: 'comment-123', date: '2020-01-01', content: 'first comment', isDelete: true, replies: [],
+        id: 'comment-123', date: '2020-01-01', content: 'first comment', isDelete: true, replies: [], likeCount: 0,
       };
       const secondComment = {
-        id: 'comment-456', date: '2020-10-01', content: 'second comment', isDelete: false, replies: [],
+        id: 'comment-456', date: '2020-10-01', content: 'second comment', isDelete: false, replies: [], likeCount: 0,
       };
 
       await CommentsTableTestHelper.addComments(firstComment);
