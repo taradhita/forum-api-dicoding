@@ -20,6 +20,7 @@ describe('a GetComment entities', () => {
       content: {},
       isDelete: [],
       replies: [],
+      likeCount: 1,
     };
     // Action and Assert
     expect(() => new GetComment(payload)).toThrowError('GET_COMMENT.NOT_MEET_DATA_TYPE_SPECIFICATION');
@@ -34,6 +35,7 @@ describe('a GetComment entities', () => {
       content: 'content',
       isDelete: true,
       replies: [],
+      likeCount: 1,
     };
     // Action
     const {

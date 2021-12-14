@@ -3,7 +3,7 @@ class GetComment {
     this._verifyPayload(payload);
 
     const {
-      id, content, date, username, isDelete, replies,
+      id, content, date, username, isDelete, replies, likeCount,
     } = payload;
 
     this.id = id;
@@ -12,6 +12,7 @@ class GetComment {
     this.username = username;
     this.isDelete = isDelete;
     this.replies = replies;
+    this.likeCount = likeCount;
   }
 
   _verifyPayload(payload) {
@@ -31,8 +32,17 @@ class GetComment {
     username,
     isDelete,
     replies,
+    likeCount,
   }) {
-    return (!id || !content || !date || !username || isDelete === undefined || !replies);
+    return (
+      !id
+      || !content
+      || !date
+      || !username
+      || isDelete === undefined
+      || !replies
+      || likeCount === undefined
+    );
   }
 
   _isPayloadNotMeetDataTypeSpecification({
@@ -42,6 +52,7 @@ class GetComment {
     username,
     isDelete,
     replies,
+    likeCount,
   }) {
     return (
       typeof id !== 'string'
@@ -50,6 +61,7 @@ class GetComment {
       || typeof username !== 'string'
       || typeof isDelete !== 'boolean'
       || !(Array.isArray(replies))
+      || typeof likeCount !== 'number'
     );
   }
 }
