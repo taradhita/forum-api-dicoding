@@ -17,11 +17,6 @@ class ReplyRepositoryPostgres extends ReplyRepository {
     } = addReply;
     const id = `reply-${this._idGenerator()}`;
 
-    const isThreadQuery = {
-      text: 'SELECT * FROM threads WHERE id = $1',
-      values: [threadId],
-    };
-
     const query = {
       text: 'INSERT INTO replies(id, content, owner, id_comment) VALUES($1,$2,$3,$4) RETURNING id, content, owner',
       values: [id, content, owner, commentId],
